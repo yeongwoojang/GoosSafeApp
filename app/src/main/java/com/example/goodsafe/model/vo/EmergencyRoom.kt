@@ -15,5 +15,7 @@ data class EmergencyRoom(
     @SerializedName("FRI") var fri : String,
     @SerializedName("SAT") var sat : String,
     @SerializedName("SUN") var sun : String,
-    @SerializedName("HOL") var hol : String
+    @SerializedName("HOL") var hol : String,
+    @SerializedName("LATITUDE") var lat : String,
+    @SerializedName("LONGITUDE") var lng : String
 )

@@ -1,27 +1,23 @@
-package com.example.goodsafe.view
+package com.example.goodsafe.view.activity
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
+import android.location.*
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.goodsafe.R
-import com.example.goodsafe.viewModel.TestViewModel
+import com.example.goodsafe.viewModel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
-import java.util.jar.Manifest
 
 
 @AndroidEntryPoint
@@ -38,8 +34,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val viewModel by viewModels<TestViewModel>()
-        val mapView = MapView(this)
+        val viewModel by viewModels<MapViewModel>()
         viewModel.getEmergencyRoom()
         val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGPSEnabled: Boolean = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -61,13 +56,14 @@ class MainActivity : AppCompatActivity() {
                 isNetworkEnabled -> {
                     val location =
                         lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) //인터넷 기반으로 위치를 찾음
-                   val getLongitude = location?.longitude!!
-                   val getLatitude = location.latitude
+                    val getLongitude = location?.longitude!!
+                    val getLatitude = location.latitude
 
-                    mapView.setMapCenterPoint(
-                        MapPoint.mapPointWithGeoCoord(getLatitude, getLongitude),
-                        true
-                    );
+                    viewModel.map
+                        .setMapCenterPoint(
+                            MapPoint.mapPointWithGeoCoord(getLatitude, getLongitude),
+                            true
+                        );
                 }
                 isGPSEnabled -> {
                     val location =
@@ -75,10 +71,11 @@ class MainActivity : AppCompatActivity() {
                     val getLongitude = location?.longitude!!
                     val getLatitude = location.latitude
 
-                    mapView.setMapCenterPoint(
-                        MapPoint.mapPointWithGeoCoord(getLatitude, getLongitude),
-                        true
-                    );
+                    viewModel.map
+                        .setMapCenterPoint(
+                            MapPoint.mapPointWithGeoCoord(getLatitude, getLongitude),
+                            true
+                        );
                 }
                 else -> {
 
@@ -95,43 +92,25 @@ class MainActivity : AppCompatActivity() {
 //            //해제부분, 상황에 맞게 잘 구현해야함
 //            lm.removeUpdates(gpsLocationListener)
         }
-
-
-        MapView.setMapTilePersistentCacheEnabled(true)
-        // 중심점 변경
-
-        // 줌 인
-        mapView.zoomIn(true);
-        // 줌 아웃
-        mapView.zoomOut(true);
-        //현재위치에 마커 표시
-        mapView.setShowCurrentLocationMarker(true)
-        mapView.setCurrentLocationRadius(3000)
-        MapView.setMapTilePersistentCacheEnabled(true)
-        map_view.addView(mapView)
-
-        val geocoder = Geocoder(this)
+        map_view.addView(viewModel.map)
+        //DB에서 응급실의 좌표들을 다 읽었을 때 실행
         viewModel.emergencyRoomLd.observe(this, Observer {
-            Thread {
-                val address = geocoder.getFromLocationName(it.get(0).address, 1)
-                val marker = MapPOIItem()
-                marker.itemName = "Test Marker"
-                marker.tag = 0
-                marker.mapPoint = MapPoint.mapPointWithGeoCoord(
-                    address.get(0).latitude.toDouble(),
-                    address.get(0).longitude.toDouble()
-                )
-                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-                mapView.addPOIItem(marker);
+            // 읽어온 응급실 좌표로 마커를 생성
+            for (i in it.indices) {
+                    val marker = MapPOIItem()
+                    marker.itemName = it[i].hName
+                    marker.tag = i
+                    marker.mapPoint = MapPoint.mapPointWithGeoCoord(
+                        it[i].lng.toDouble(),
+                        it[i].lat.toDouble()
+                    )
+                    marker.markerType = MapPOIItem.MarkerType.BluePin; // 기본으로 제공하는 BluePin 마커 모양.
+                    marker.selectedMarkerType =
+                        MapPOIItem.MarkerType.RedPin; // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                    viewModel.map.addPOIItem(marker);
+            }
 
-            }.start()
         })
-
-    }
-
-    fun gpsEnableed(lm: LocationManager) {
-
     }
 
     val gpsLocationListener = object : LocationListener {
