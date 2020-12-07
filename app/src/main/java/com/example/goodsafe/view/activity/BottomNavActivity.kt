@@ -1,9 +1,14 @@
 package com.example.goodsafe.view.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.forEach
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -18,14 +23,21 @@ import kotlinx.android.synthetic.main.activity_bottom_nav.*
 class BottomNavActivity : AppCompatActivity() {
 
     val viewModel by viewModels<MapViewModel>()
-     var menuItem : Int = 0
+    var menuItem: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottom_nav)
-//        val navHostFragment  = Navigation.findNavController(this,R.id.nav_host)
-        NavigationUI.setupWithNavController(bottom_navigation_view, findNavController(R.id.nav_host))
-        bottom_navigation_view.setOnNavigationItemReselectedListener{item ->
-            when(item.itemId){
+
+
+        viewModel.getEmergencyRoom()
+
+        NavigationUI.setupWithNavController(
+            bottom_navigation_view,
+            findNavController(R.id.nav_host)
+        )
+        bottom_navigation_view.setOnNavigationItemReselectedListener { item ->
+            when (item.itemId) {
                 R.id.homeFragment -> {
                     menuItem = item.itemId
                 }
@@ -38,11 +50,10 @@ class BottomNavActivity : AppCompatActivity() {
             }
         }
         bottom_navigation_view.menu.forEach {
-            if(it.itemId ==menuItem){
-            it.isEnabled = false
+            if (it.itemId == menuItem) {
+                it.isEnabled = false
             }
         }
-        viewModel.createMapView(this)
     }
 
 }

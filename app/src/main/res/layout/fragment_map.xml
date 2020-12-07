@@ -4,12 +4,36 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.MapFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".view.fragment.MapFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/hospital_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/bm_dohyeon_ttf"
+            android:text="병원명"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:textSize="16dp"/>
+        <Button
+            android:id="@+id/search_bt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:text="길 찾기"
+       />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
