@@ -1,5 +1,6 @@
 package com.example.goodsafe.view.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,8 +21,6 @@ import kotlinx.android.synthetic.main.fragment_home.*
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-//    val viewModel by activityViewModels<MapViewModel>()
-
     val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,16 +37,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ListAdapter()
+        val adapter = ListAdapter(requireContext())
 
         recyclerView.apply {
             this.layoutManager =LinearLayoutManager(requireContext(),RecyclerView.VERTICAL,false)
             this.adapter = adapter
         }
-
-        viewModel.getNearHostpital(126.9440277, 37.4807786)
-//        viewModel.emergencyRoomLd.observe(requireActivity(), Observer {
-//            adapter.updateItems(it)
-//        })
+        viewModel.point.observe(requireActivity(), Observer {point->
+            viewModel.getNearHostpital(point.latitude, point.longitude)
+        })
+        viewModel.nearHospital.observe(requireActivity(), Observer {
+            adapter.updateItems(it)
+        })
     }
 }

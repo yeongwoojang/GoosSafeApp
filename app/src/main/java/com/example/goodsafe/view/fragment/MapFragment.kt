@@ -105,7 +105,8 @@ class MapFragment : Fragment(), MapView.POIItemEventListener {
         })
         //DB에서 응급실의 좌표들을 다 읽었을 때 실행
         viewModel.emergencyRoomLd.observe(requireActivity(), Observer {
-            mapView.setCurrentLocationRadius(1000)
+            Log.d("sgs", "onViewCreated: ${it.toString()}")
+            mapView.setCurrentLocationRadius(1500)
 
             // 읽어온 응급실 좌표로 마커를 생성
             for (i in it.indices) {
@@ -113,8 +114,8 @@ class MapFragment : Fragment(), MapView.POIItemEventListener {
                 marker.itemName = it[i].hName
                 marker.tag = i
                 marker.mapPoint = MapPoint.mapPointWithGeoCoord(
-                    it[i].lng,
-                    it[i].lat
+                    it[i].lat,
+                    it[i].lng
                 )
                 marker.markerType = MapPOIItem.MarkerType.BluePin; // 기본으로 제공하는 BluePin 마커 모양.
                 marker.selectedMarkerType =

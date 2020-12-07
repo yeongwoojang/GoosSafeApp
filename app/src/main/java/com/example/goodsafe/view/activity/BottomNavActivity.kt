@@ -30,8 +30,6 @@ class BottomNavActivity : AppCompatActivity() {
         setContentView(R.layout.activity_bottom_nav)
 
 
-        viewModel.getEmergencyRoom()
-
         NavigationUI.setupWithNavController(
             bottom_navigation_view,
             findNavController(R.id.nav_host)
