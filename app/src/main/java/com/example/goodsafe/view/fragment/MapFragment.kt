@@ -27,7 +27,6 @@ import androidx.lifecycle.Observer
 import com.example.goodsafe.R
 import com.example.goodsafe.viewModel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint

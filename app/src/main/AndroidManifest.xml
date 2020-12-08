@@ -3,7 +3,7 @@
     package="com.example.goodsafe">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -16,8 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.activity.BottomNavActivity"></activity>
-        <activity android:name=".view.activity.MapActivity"></activity>
+        <activity android:name=".view.activity.HptListActivity"></activity>
+        <activity android:name=".view.activity.ExplainActivity" />
+        <activity android:name=".view.activity.HomeActivity" />
+        <activity android:name=".view.activity.BottomNavActivity" />
+        <activity android:name=".view.activity.MapActivity" />
         <activity android:name=".view.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +33,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="219f80f2814572a675f25b1a34be45e9" />
 
-        <activity android:name=".view.activity.MainActivity"></activity>
+        <activity android:name=".view.activity.MainActivity" />
     </application>
 
 </manifest>

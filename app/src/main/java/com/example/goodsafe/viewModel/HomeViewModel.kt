@@ -17,8 +17,10 @@ class HomeViewModel @ViewModelInject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel(){
 
+    companion object{
+        val TAG = HomeViewModel::class.java.simpleName
+    }
     init {
-        getXY()
     }
     val point = MutableLiveData<Location>()
     val nearHospital = MutableLiveData<List<NearHospital>>()
@@ -30,13 +32,28 @@ class HomeViewModel @ViewModelInject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    fun getXY() {
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+    fun requestPermission() {
+        Log.d(TAG, "getXY: ")
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
             point.value = location
-            Log.d(MapViewModel.TAG, "위치정보를 불러왔습니다.")
+            Log.d(TAG, "getXY: ${location?.latitude}")
+            Log.d(TAG, "위치정보를 불러왔습니다.")
         }.addOnFailureListener { exception ->
             //위치 정보 불러오기 실패 시
-            Log.d(MapViewModel.TAG, "위치 정보를 불러오지 못했습니다.")
+            Log.d(TAG, "위치 정보를 불러오지 못했습니다.")
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getXY() {
+        Log.d(TAG, "getXY: ")
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+            point.value = location
+            Log.d(TAG, "getXY: ${point.toString()}")
+            Log.d(TAG, "위치정보를 불러왔습니다.")
+        }.addOnFailureListener { exception ->
+            //위치 정보 불러오기 실패 시
+            Log.d(TAG, "위치 정보를 불러오지 못했습니다.")
         }
     }
 }

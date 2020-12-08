@@ -6,26 +6,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/style_main"
-    tools:context=".view.fragment.HomeFragment">
+    tools:context=".view.activity.HptListActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/appThirdColor">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/appThirdColor">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/bm_dohyeon_ttf"
-            android:text="Good Safe"
-            android:textSize="20dp"
-            android:textColor="@color/black" />
-    </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/bm_dohyeon_ttf"
+                android:text="Good Safe"
+                android:textSize="20dp"
+                android:textColor="@color/black" />
+        </androidx.appcompat.widget.Toolbar>
         <androidx.cardview.widget.CardView
             android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"

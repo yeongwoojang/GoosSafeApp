@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/bm_dohyeon_ttf"
+        android:text="1. 응급상황인지 아닌지 확인한다."
+        android:textColor="@color/red300"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/bm_dohyeon_ttf"
+        android:text="응급 상황 시 고려할정"
+        android:textColor="@color/black"
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/subContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/bm_dohyeon_ttf"
+        android:text="1. 자기 자신을 위험한 상황에 노출시키지 않는다.\n\n2. 주변에 기름이나 가스같은 위험물질이 있는지 확인한다.\n\n3. 혼자서 너무 많은 것을 하려고 하지 않는다."
+        android:textColor="@color/blue300"
+        android:textSize="15dp"></TextView>
+</LinearLayout>

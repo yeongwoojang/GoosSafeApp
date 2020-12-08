@@ -15,7 +15,7 @@ class SplashActivity : AppCompatActivity() {
         //2초동안 스플래시 화면을 보여준다.
         Handler(Looper.getMainLooper()).postDelayed({
             val intent  = Intent(this,
-                BottomNavActivity::class.java)
+                HomeActivity::class.java)
             startActivity(intent)
             finish()
         },1000)
