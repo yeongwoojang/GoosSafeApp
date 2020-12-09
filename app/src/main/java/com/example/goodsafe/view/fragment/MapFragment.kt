@@ -166,7 +166,6 @@ class MapFragment : Fragment(), MapView.POIItemEventListener {
                 viewModel.getXY()
             } else {
                 Toast.makeText(requireContext(), "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
-
             }
         }
 

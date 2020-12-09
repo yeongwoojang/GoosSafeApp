@@ -23,13 +23,17 @@ class HptListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_hpt_list)
 
         val adapter = ListAdapter(this)
-        viewModel.getXY()
+        viewModel.updateLocation()
         recyclerView.apply {
             this.layoutManager = LinearLayoutManager(this@HptListActivity, RecyclerView.VERTICAL,false)
             this.adapter = adapter
         }
         viewModel.point.observe(this, Observer {point->
+            if(point!=null){
             viewModel.getNearHostpital(point.latitude, point.longitude)
+            }else{
+                viewModel.updateLocation()
+            }
         })
         viewModel.nearHospital.observe(this, Observer {
             adapter.updateItems(it)

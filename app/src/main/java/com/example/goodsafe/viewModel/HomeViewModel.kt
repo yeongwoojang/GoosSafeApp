@@ -2,6 +2,7 @@ package com.example.goodsafe.viewModel
 
 import android.annotation.SuppressLint
 import android.location.Location
+import android.os.Looper
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goodsafe.model.vo.NearHospital
 import com.example.goodsafe.repository.ServiceApi
+import com.example.goodsafe.view.activity.HomeActivity
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.launch
 
 class HomeViewModel @ViewModelInject constructor(
@@ -20,8 +25,19 @@ class HomeViewModel @ViewModelInject constructor(
     companion object{
         val TAG = HomeViewModel::class.java.simpleName
     }
-    init {
+
+    private val locationCallback = object: LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            locationResult?.let {
+                for((i, location) in it.locations.withIndex()) {
+                    Log.d(TAG, "$i ${location.latitude} , ${location.longitude}")
+                }
+            }
+        }
     }
+
+
+
     val point = MutableLiveData<Location>()
     val nearHospital = MutableLiveData<List<NearHospital>>()
     fun getNearHostpital(curLat : Double, curLng : Double){
@@ -32,8 +48,14 @@ class HomeViewModel @ViewModelInject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    fun requestPermission() {
-        Log.d(TAG, "getXY: ")
+    fun updateLocation() {
+        val locationRequest = LocationRequest.create()
+
+        locationRequest.run{
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 60*1000
+        }
+
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
             point.value = location
             Log.d(TAG, "getXY: ${location?.latitude}")
@@ -42,18 +64,10 @@ class HomeViewModel @ViewModelInject constructor(
             //위치 정보 불러오기 실패 시
             Log.d(TAG, "위치 정보를 불러오지 못했습니다.")
         }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper())
     }
 
-    @SuppressLint("MissingPermission")
-    fun getXY() {
-        Log.d(TAG, "getXY: ")
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            point.value = location
-            Log.d(TAG, "getXY: ${point.toString()}")
-            Log.d(TAG, "위치정보를 불러왔습니다.")
-        }.addOnFailureListener { exception ->
-            //위치 정보 불러오기 실패 시
-            Log.d(TAG, "위치 정보를 불러오지 못했습니다.")
-        }
+    fun removeLocationUpdates(){
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 }
