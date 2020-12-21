@@ -84,6 +84,7 @@ class HomeActivity : AppCompatActivity() {
                             DialogInterface.BUTTON_NEGATIVE->
                             Toast.makeText(this@HomeActivity, "위치 서비스를 허용해주세요", Toast.LENGTH_LONG)
                                 .show()
+
                     }
                 }
             }
@@ -99,6 +100,10 @@ class HomeActivity : AppCompatActivity() {
 
         hpt_list_bt.setOnClickListener {
             startActivity(Intent(this, HptListActivity::class.java))
+        }
+
+        map_bt.setOnClickListener {
+            startActivity(Intent(this,MapActivity::class.java))
         }
 
     }

@@ -68,7 +68,6 @@
                         app:cardElevation="8dp"
                         >
                         <ImageButton
-                            android:id="@+id/map_bt"
                             android:layout_width="130dp"
                             android:layout_height="130dp"
                             android:layout_gravity="center"
@@ -142,6 +141,7 @@
                         app:cardElevation="8dp"
                         >
                         <ImageButton
+                            android:id="@+id/map_bt"
                             android:layout_width="130dp"
                             android:layout_height="130dp"
                             android:layout_gravity="center"

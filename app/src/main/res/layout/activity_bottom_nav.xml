@@ -16,13 +16,13 @@
         android:layout_weight="1"
         app:navGraph="@navigation/nav_graph" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:itemBackground="@color/appThirdColor"
-        app:itemIconTint="@color/gray200"
-        app:itemTextColor="@color/gray200"
-        app:menu="@menu/menu" />
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/bottom_navigation_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        app:itemBackground="@color/appThirdColor"-->
+<!--        app:itemIconTint="@color/gray200"-->
+<!--        app:itemTextColor="@color/gray200"-->
+<!--        app:menu="@menu/menu" />-->
 </LinearLayout>

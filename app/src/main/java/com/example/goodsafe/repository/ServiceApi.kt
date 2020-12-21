@@ -1,12 +1,11 @@
 package com.example.goodsafe.repository
 
-import com.example.goodsafe.model.vo.EmergencyRoom
-import com.example.goodsafe.model.vo.EmergencyRoomInfo
-import com.example.goodsafe.model.vo.NearHospitalInfo
+import com.example.goodsafe.model.vo.*
 import retrofit2.http.*
 interface ServiceApi {
     companion object {
         val BASE_URL: String = "http://ec2-15-164-129-208.ap-northeast-2.compute.amazonaws.com:3000"
+        val OPEN_DATA_URL :String = "http://openapi.seoul.go.kr:8088/6b62436b676a797739386c494c5a58/json/tbEmgcAedInfo/"
     }
 
     @GET("/goodSafe/getEmergencyRoom")
@@ -17,4 +16,7 @@ interface ServiceApi {
         @Query("curLat") curLat : Double,
         @Query("curLng") curLng : Double
     ) : NearHospitalInfo
+
+    @GET("1/1000")
+    suspend fun getAedInfo() : TotalEmgcAedInfo
 }
