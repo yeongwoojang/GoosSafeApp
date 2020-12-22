@@ -5,29 +5,29 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
 import androidx.lifecycle.Observer
 import com.example.goodsafe.R
 import com.example.goodsafe.view.fragment.MapFragment
 import com.example.goodsafe.viewModel.MapViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_bottom_nav.*
 import kotlinx.android.synthetic.main.activity_map.*
-import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.android.synthetic.main.fragment_map.linearLayout
 import kotlinx.android.synthetic.main.fragment_map.map_view
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -104,9 +104,42 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
 
         }
 
+        slidingView.isTouchEnabled=false
+        slidingView.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener{
+            override fun onPanelSlide(panel: View?, slideOffset: Float) {
+                Log.d("PAMEL", "onPanelSlide: ${slidingView.panelState}")
+
+            }
+            var panelState : Boolean = false
+            override fun onPanelStateChanged(
+                panel: View?,
+                previousState: SlidingUpPanelLayout.PanelState?,
+                newState: SlidingUpPanelLayout.PanelState?
+            ) {
+
+                Log.d("state", "onPanelStateChanged: ${panelState}")
+                if(slidingView.panelState== SlidingUpPanelLayout.PanelState.COLLAPSED){
+                    Log.d("state", "onPanelSlide: COLLAPSED")
+                    slidingView.isTouchEnabled=false
+                    panelState = false
+                    dragView.setBackgroundColor(Color.TRANSPARENT)
+
+                }else if(slidingView.panelState== SlidingUpPanelLayout.PanelState.EXPANDED){
+                    Log.d("state", "onPanelSlide: EXPANDED")
+                    slidingView.isTouchEnabled=true
+                    panelState = true
+                }else if(slidingView.panelState ==SlidingUpPanelLayout.PanelState.DRAGGING){
+                    if(panelState){
+                        slidingView.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+                    }else{
+                        dragView.setBackgroundResource(R.drawable.form_drag_view)
+
+                    }
+
+                }
+            }
+        })
         val mapView = MapView(this)
-
-
         viewModel.point.observe(this, Observer { location ->
 
             curLatitude = location.latitude.toString()
@@ -130,7 +163,7 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
         })
         //DB에서 응급실의 좌표들을 다 읽었을 때 실행
         viewModel.emergencyRoomLd.observe(this, Observer {
-            Log.d("sgs", "onViewCreated: ${it.toString()}")
+            mapView.removeAllPOIItems()
 
             // 읽어온 응급실 좌표로 마커를 생성
             for (i in it.indices) {
@@ -141,6 +174,25 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
                     it[i].lat,
                     it[i].lng
                 )
+                marker.isShowCalloutBalloonOnTouch = true
+                marker.markerType = MapPOIItem.MarkerType.YellowPin; // 기본으로 제공하는 BluePin 마커 모양.
+                marker.selectedMarkerType =
+                    MapPOIItem.MarkerType.RedPin; // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                mapView.addPOIItem(marker);
+            }
+        })
+
+
+        viewModel.emgcAedLiveData.observe(this, Observer {
+            mapView.removeAllPOIItems()
+            for (i in it.indices) {
+                val marker = MapPOIItem()
+                marker.itemName = it[i].org
+                marker.tag = i
+                marker.mapPoint = MapPoint.mapPointWithGeoCoord(
+                    it[i].latitude,
+                    it[i].longitude
+                )
                 marker.markerType = MapPOIItem.MarkerType.YellowPin; // 기본으로 제공하는 BluePin 마커 모양.
                 marker.selectedMarkerType =
                     MapPOIItem.MarkerType.RedPin; // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
@@ -148,16 +200,15 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
             }
         })
         mapView.setPOIItemEventListener(this)
-
-
-
         bottom_navigation_view.setOnNavigationItemSelectedListener { item ->
             Log.d("Asd", "onCreate: itemClick")
 
             when (item.itemId) {
 
                 R.id.find_aed->{
-                    viewModel.getEmgcAed()
+                    if(viewModel.point.value!=null){
+                        viewModel.getEmgcAed(curLatitude.toDouble(),curLongitude.toDouble())
+                    }
                 }
 
                 R.id.find_emergency_room->{
@@ -167,7 +218,7 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
                     if(kakaoUrl!=""){
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(kakaoUrl)))
                     }else{
-                        Snackbar.make(linearLayout,"목적지를 선택해주세요",Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(slidingView,"목적지를 선택해주세요",Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -182,7 +233,9 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
     }
 
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {
-        TODO("Not yet implemented")
+        tel_text.text = p1?.itemName
+       val obj = viewModel.getMarkerDetail(p1?.itemName)
+        tel_text.text = obj?.buildAddress +": "+ obj?.buildPlace +":" + obj?.managerTel
     }
 
     override fun onCalloutBalloonOfPOIItemTouched(
@@ -190,7 +243,7 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
         p1: MapPOIItem?,
         p2: MapPOIItem.CalloutBalloonButtonType?
     ) {
-        TODO("Not yet implemented")
+        slidingView.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
     }
 
     override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {
@@ -201,4 +254,5 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
         super.onPause()
         viewModel.removeLocationUpdates()
     }
+
 }

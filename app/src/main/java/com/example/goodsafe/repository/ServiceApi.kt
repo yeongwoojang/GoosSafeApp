@@ -17,6 +17,9 @@ interface ServiceApi {
         @Query("curLng") curLng : Double
     ) : NearHospitalInfo
 
-    @GET("1/1000")
-    suspend fun getAedInfo() : TotalEmgcAedInfo
+    @GET("/goodSafe/emergencyAed")
+    suspend fun getEmergencyAed(
+        @Query("curLat") curLat : Double,
+        @Query("curLng") curLng : Double
+    ) : EmergencyAedInfo
 }

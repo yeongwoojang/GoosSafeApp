@@ -84,4 +84,6 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.2.0-alpha06'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'me.relex:circleindicator:1.2.2'
+
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
 }

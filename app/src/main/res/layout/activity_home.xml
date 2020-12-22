@@ -29,7 +29,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <RelativeLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/slidingView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar">
