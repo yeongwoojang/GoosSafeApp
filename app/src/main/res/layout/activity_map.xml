@@ -32,7 +32,7 @@
         android:layout_height="300dp"
         android:background="@color/transparent">
         <TextView
-            android:id="@+id/tel_text"
+            android:id="@+id/manager_text"
             android:layout_below="@+id/bottom_navigation_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,44 @@
             android:textColor="@color/black"
             android:text=""
             android:textSize="13dp"
-            ></TextView>
+           />
+        <TextView
+            android:id="@+id/manager_tel_text"
+            android:layout_below="@+id/manager_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"
+            android:text=""
+            android:textSize="13dp"
+            />
+
+        <TextView
+            android:id="@+id/build_place_text"
+            android:layout_below="@+id/manager_tel_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"
+            android:text=""
+            android:textSize="13dp"
+            />
+        <TextView
+            android:id="@+id/clerk_tel_text"
+            android:layout_below="@+id/build_place_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"
+            android:text=""
+            android:textSize="13dp"
+            />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation_view"
@@ -54,6 +91,7 @@
             android:elevation="8dp"
             app:itemIconTint="@color/black"
             app:itemTextColor="@color/black"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/menu" />
     </RelativeLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

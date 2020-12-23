@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 
 class MapViewModel @ViewModelInject constructor(
     private val service: ServiceApi,
-    @OpenAPIClient private val customService: ServiceApi,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
 
@@ -32,7 +31,6 @@ class MapViewModel @ViewModelInject constructor(
         override fun onLocationResult(locationResult: LocationResult?) {
             locationResult?.let {
                 for ((i, location) in it.locations.withIndex()) {
-                    Log.d(HomeViewModel.TAG, "$i ${location.latitude} , ${location.longitude}")
                 }
             }
         }
@@ -62,7 +60,7 @@ class MapViewModel @ViewModelInject constructor(
             interval = 60 * 1000
         }
 
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener {  location: Location? ->
             point.value = location
             Log.d(TAG, "위치정보를 불러왔습니다.")
         }.addOnFailureListener { exception ->
