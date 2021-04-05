@@ -1,7 +1,9 @@
 package com.example.goodsafe.view.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.goodsafe.R
 import com.example.goodsafe.model.vo.Explain
 import com.example.goodsafe.view.adapter.ExplainPagerAdapter
@@ -27,6 +29,9 @@ class ExplainActivity : AppCompatActivity() {
                     "4. 환자의 수를 정확히 알려준다."),
             Explain("4. 환자를 안전한 장소로 옮긴 후 응급처치를 실시한다.","대부분의 생명구조 활동은 가장 가까이에 있던 사람이 응급조치를 취했을 경우에 효과가 크다. 즉, 주위에 있는 사람의 즉각적인 응급조치가 가장 바람직하다.","")
         )
+            val FINISH_INTERVAL_TIME :Long=2000
+            var backPressedTime :Long=0
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,19 @@ class ExplainActivity : AppCompatActivity() {
         val adapter = ExplainPagerAdapter(explain)
         viewPager.adapter = adapter
         indicator.setViewPager(viewPager)
+
+    }
+    override fun onBackPressed() {
+        finish()
+        startActivity(Intent(this,HomeActivity::class.java))
+//        var tempTime = System.currentTimeMillis()
+//        var intervalTime = tempTime- backPressedTime
+//        if(0<=intervalTime && FINISH_INTERVAL_TIME >= intervalTime){
+//            super.onBackPressed()
+//        }else{
+//            backPressedTime = tempTime
+//            Toast.makeText(applicationContext,"뒤로가기 버튼을 한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+//        }
 
     }
 }

@@ -1,7 +1,9 @@
 package com.example.goodsafe.view.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -15,6 +17,12 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 @AndroidEntryPoint
 class HptListActivity : AppCompatActivity() {
+
+    companion object{
+        val FINISH_INTERVAL_TIME :Long=2000
+        var backPressedTime :Long=0
+    }
+
     val viewModel by viewModels<HomeViewModel>()
 
 
@@ -30,7 +38,7 @@ class HptListActivity : AppCompatActivity() {
         }
         viewModel.point.observe(this, Observer {point->
             if(point!=null){
-            viewModel.getNearHostpital(point.latitude, point.longitude)
+                viewModel.getNearHostpital(point.latitude, point.longitude)
             }else{
                 viewModel.updateLocation()
             }
@@ -38,5 +46,19 @@ class HptListActivity : AppCompatActivity() {
         viewModel.nearHospital.observe(this, Observer {
             adapter.updateItems(it)
         })
+    }
+
+    override fun onBackPressed() {
+        finish()
+        startActivity(Intent(this,HomeActivity::class.java))
+//        var tempTime = System.currentTimeMillis()
+//        var intervalTime = tempTime- backPressedTime
+//        if(0<=intervalTime && FINISH_INTERVAL_TIME >= intervalTime){
+//            super.onBackPressed()
+//        }else{
+//            backPressedTime = tempTime
+//            Toast.makeText(applicationContext,"뒤로가기 버튼을 한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+//        }
+
     }
 }

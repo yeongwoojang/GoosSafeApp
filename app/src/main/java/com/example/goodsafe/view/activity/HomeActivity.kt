@@ -26,8 +26,11 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_home.slidingView
+import kotlinx.android.synthetic.main.activity_map.*
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -47,6 +50,7 @@ class HomeActivity : AppCompatActivity() {
 //                viewModel.requestPermission()
             } else {
                 Log.d(TAG, "no")
+                Snackbar.make(slidingView,"위치권한을 허가해주세요", Snackbar.LENGTH_SHORT).show()
             }
 
         }
@@ -96,14 +100,17 @@ class HomeActivity : AppCompatActivity() {
 
         explain_bt.setOnClickListener {
             startActivity(Intent(this, ExplainActivity::class.java))
+            finish()
         }
 
         hpt_list_bt.setOnClickListener {
             startActivity(Intent(this, HptListActivity::class.java))
+            finish()
         }
 
         map_bt.setOnClickListener {
             startActivity(Intent(this,MapActivity::class.java))
+            finish()
         }
 
     }
@@ -111,5 +118,16 @@ class HomeActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.removeLocationUpdates()
+    }
+    override fun onBackPressed() {
+        var tempTime = System.currentTimeMillis()
+        var intervalTime = tempTime- MapActivity.backPressedTime
+        if(0<=intervalTime && MapActivity.FINISH_INTERVAL_TIME >= intervalTime){
+            super.onBackPressed()
+        }else{
+            MapActivity.backPressedTime = tempTime
+            Toast.makeText(applicationContext,"뒤로가기 버튼을 한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }

@@ -60,7 +60,7 @@ class MapViewModel @ViewModelInject constructor(
             interval = 60 * 1000
         }
 
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener {  location: Location? ->
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
             point.value = location
             Log.d(TAG, "위치정보를 불러왔습니다.")
         }.addOnFailureListener { exception ->
@@ -79,21 +79,31 @@ class MapViewModel @ViewModelInject constructor(
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-    fun getEmgcAed(curLat : Double, curLng : Double) {
+    fun getEmgcAed(curLat: Double, curLng: Double) {
         viewModelScope.launch {
-            val data = service.getEmergencyAed(curLat,curLng).emergencyAed
+            val data = service.getEmergencyAed(curLat, curLng).emergencyAed
             emgcAedLiveData.value = data
-            }
-
         }
 
-    fun getMarkerDetail(itemName : String?) : EmergencyAed?{
-        var obj : EmergencyAed? =null
-        for(i in emgcAedLiveData.value?.indices!!){
-            if(emgcAedLiveData.value!![i].org==itemName){
+    }
+
+    fun getMarkerDetail(itemName: String?): EmergencyAed? {
+        var obj: EmergencyAed? = null
+        for (i in emgcAedLiveData.value?.indices!!) {
+            if (emgcAedLiveData.value!![i].org == itemName) {
                 obj = emgcAedLiveData.value!![i]
             }
         }
         return obj
     }
+
+    fun getEmgcRoomDetail(itemName : String?) : EmergencyRoom?{
+        var obj : EmergencyRoom? = null
+        for(i in emergencyRoomLd.value?.indices!!){
+            if(emergencyRoomLd.value!![i].hName==itemName){
+                obj = emergencyRoomLd.value!![i]
+            }
+        }
+        return obj
     }
+}

@@ -59,7 +59,9 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
                 Log.d(HomeActivity.TAG, "permission : permission is granted")
 //                viewModel.requestPermission()
             } else {
-
+                Snackbar.make(slidingView,"위치권한을 허가하시면 지도를 볼 수 있습니다.",Snackbar.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext,HomeActivity::class.java))
+                finish()
             }
 
         }
@@ -84,6 +86,8 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
                     viewModel.getXY()
                 } else {
                     Snackbar.make(slidingView,"위치권한을 허가하시면 지도를 볼 수 있습니다.",Snackbar.LENGTH_SHORT).show()
+                    startActivity(Intent(applicationContext,HomeActivity::class.java))
+                    finish()
                 }
 
             }
@@ -115,9 +119,13 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
                     when (p) {
                         DialogInterface.BUTTON_POSITIVE ->
                             requestActivity.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                        DialogInterface.BUTTON_NEGATIVE->
+                        DialogInterface.BUTTON_NEGATIVE->{
                             Toast.makeText(this@MapActivity, "위치 서비스를 허용해주세요", Toast.LENGTH_LONG)
                                 .show()
+                                startActivity(Intent(applicationContext,HomeActivity::class.java))
+                                finish()
+                        }
+
                     }
                 }
             }
@@ -208,8 +216,11 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
             // 읽어온 응급실 좌표로 마커를 생성
             for (i in it.indices) {
                 val marker = MapPOIItem()
+                Log.d("HNAME", "onCreate: ${it[i].hName}")
                 marker.itemName = it[i].hName
-                marker.tag = i
+//                marker.tag = i
+                marker.tag = 1002
+
                 marker.mapPoint = MapPoint.mapPointWithGeoCoord(
                     it[i].lat,
                     it[i].lng
@@ -227,6 +238,7 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
             mapView?.removeAllPOIItems()
             for (i in it.indices) {
                 val marker = MapPOIItem()
+                Log.d("ORG", "onCreate: ${ it[i].org}")
                 marker.itemName = it[i].org
                 marker.tag = 1001
                 marker.mapPoint = MapPoint.mapPointWithGeoCoord(
@@ -288,11 +300,19 @@ class MapActivity : AppCompatActivity(),MapView.POIItemEventListener {
         p2: MapPOIItem.CalloutBalloonButtonType?
     ) {
         if(p1?.tag==1001){
+            Log.d("TEST", "onCalloutBalloonOfPOIItemTouched: ${p1?.itemName}")
             val obj = viewModel.getMarkerDetail(p1?.itemName)
             manager_text.text = "관리자 : ${obj?.manager}"
             manager_tel_text.text = "관리자 연락처 : ${obj?.managerTel}"
             build_place_text.text = "위치 : ${obj?.buildPlace}"
             clerk_tel_text.text = "전화번호 : ${obj?.clerkTel}"
+            slidingView.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        }else{
+            val obj = viewModel.getEmgcRoomDetail(p1?.itemName)
+            manager_text.text = "병원명 : ${obj?.hName}"
+            manager_tel_text.text = "전화번호 : ${obj?.tell}"
+            clerk_tel_text.text = "분류 : ${obj?.hWork}"
+            build_place_text.text = "위치 : ${obj?.address}"
             slidingView.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         }
 
